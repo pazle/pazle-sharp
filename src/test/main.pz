@@ -1,0 +1,13 @@
+x = 90 + 8
+
+
+if 0
+	print('hello world')
+elif 0
+	print(0)
+elif 0
+	print(7)
+else
+	print('else')
+
+x = 90

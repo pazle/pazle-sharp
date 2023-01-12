@@ -1,0 +1,31 @@
+module PzFunction;
+
+import std.stdio;
+import PzObject, PzBytes2, PzBytes, PzExec;
+
+
+alias PzOBJECT[string] store;
+
+class PzFn: PzOBJECT {
+	store heap;
+	string name;
+	string[] params;
+	PzByte[] code, defaults;
+	
+	this(string name, string[] params, PzByte[] code, PzByte[] defaults, store heap){
+		this.name = name;
+		this.code = code;
+		this.heap = heap;
+		this.params = params;
+		this.defaults = defaults;
+	}
+
+	override PzOBJECT opCall(PzOBJECT[] args){
+		new _Interpreter(code, heap.dup);
+		return new PzOBJECT();
+	}
+
+	override string __str__(){
+		return "<" ~ this.name ~ " (custom function)>";
+	}
+}

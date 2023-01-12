@@ -1,0 +1,12 @@
+inter
+	climb      move to next ast
+	branch     position of current ast
+	leaf	   current ast
+	tree       array of asts
+	irrigate   loop for genearating intermediate code
+	seed       checks if all ast are turned to intermediate code
+
+	sap        ast given to the watering function
+	water      function to generate a data
+
+

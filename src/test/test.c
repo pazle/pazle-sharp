@@ -1,11 +1,11 @@
-import std.stdio;
+#include <stdio.h>
 
-
-int main(){
+int main()
+{
 	int x = 10000000;
 
 	while (x){
-		writeln(x);
+		printf("%d\n", x);
 		x--;
 	}
 	return 0;

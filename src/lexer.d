@@ -106,6 +106,9 @@ class Lex{
 			case "in":
 				this.tokens ~= new Token(key, "IN", this.tab, this.line, this.loc);
 				break;
+			case "to":
+				this.tokens ~= new Token(key, "TO", this.tab, this.line, this.loc);
+				break;
 			case "return":
 				this.tokens ~= new Token(key, "RET", this.tab, this.line, this.loc);
 				break;

@@ -2,9 +2,11 @@ module PzBytes2;
 
 
 import std.conv;
+import std.stdio;
 
 import PzBytes;
-import PzObject, PzNumber, PzString;
+import PzObject, PzNumber, PzString, PzArray;
+import PzHash, PzType;
 
 
 alias PzOBJECT[string] HEAP;
@@ -147,3 +149,115 @@ class Op_Stimes: PzByte {
 	}
 	override int type(){ return 2; }
 }
+
+
+class Op_Array: PzByte {
+	PzByte[] items;
+
+	this(PzByte[] items){
+		this.items = items;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		PzOBJECT[] arr;
+
+		foreach(PzByte i; items)
+			arr ~= i(_heap);
+
+		return new PzArr(arr);
+	}
+	override int type(){ return 3; }
+}
+
+
+class Op_Aadd: PzByte {
+	PzByte left, right;
+
+	this(PzByte left, PzByte right){
+		this.left = left;
+		this.right = right;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		return new PzArr(left(_heap).__array__ ~ right(_heap).__array__);
+	}
+
+	override int type(){ return 3; }
+}
+
+
+class Op_Hash: PzByte {
+	string[] keys;
+	PzByte[] values;
+
+	this(string[] keys, PzByte[] values){
+		this.keys = keys;
+		this.values = values;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		PzOBJECT[string] hash;
+
+		for(int i = 0; i < keys.length; i++)
+			hash[keys[i]] = values[i](_heap);
+
+		return new PzHsh(hash);
+	}
+
+	override int type(){ return 3; }
+}
+
+
+class Op_Pindex: PzByte {
+	PzByte value, index;
+
+	this(PzByte value, PzByte index){
+		this.value = value;
+		this.index = index;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		return value(_heap).__index__(index(_heap));
+	}
+}
+
+
+class Op_PiAssign: PzByte {
+	PzByte key, index, value;
+
+	this(PzByte key, PzByte index, PzByte value){
+		this.key = key;
+		this.index = index;
+		this.value = value;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		key(_heap).__assign__(index(_heap), value(_heap));
+		return new PzOBJECT();
+	}
+}
+
+
+class Op_Pobj: PzByte {
+	string name;
+	string[] attrs;
+	PzByte[] contrib, code;
+
+	this(string name, PzByte[] contrib, string[] attrs, PzByte[] code){
+		this.name = name;
+		this.code = code;
+		this.attrs = attrs;
+		this.contrib = contrib;
+	}
+
+	override PzOBJECT opCall(HEAP _heap){
+		PzOBJECT[] h;
+
+		foreach(PzByte i; contrib)
+			h ~= i(_heap);
+
+		_heap[name] = new PzTyp(name, h, attrs, code, _heap);
+		return new PzOBJECT();
+	}
+}
+

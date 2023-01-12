@@ -9,10 +9,11 @@ alias PzOBJECT[string] store;
 class PzFn: PzOBJECT {
 	store heap;
 	string name;
+	PzByte[] code;
 	string[] params;
-	PzByte[] code, defaults;
+	PzOBJECT[] defaults;
 	
-	this(string name, string[] params, PzByte[] code, PzByte[] defaults, store heap){
+	this(string name, string[] params, PzOBJECT[] defaults, PzByte[] code, store heap){
 		this.name = name;
 		this.code = code;
 		this.heap = heap;
@@ -26,6 +27,6 @@ class PzFn: PzOBJECT {
 	}
 
 	override string __str__(){
-		return "<" ~ this.name ~ " (custom function)>";
+		return "<function '" ~ this.name ~ "'>";
 	}
 }

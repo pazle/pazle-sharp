@@ -640,10 +640,11 @@ class Parse{
 			this.SyntaxError("'for' expected 'in' not '" ~ this.tok.value ~"' after ID.");
 
 		this.next();
-		this.ast ~= new ForNode(
-			    id, this.eval("NL{:"),
-			    new Parse(this.getCode(), this.file).ast
-			);
+		Node fm = this.eval("TO");
+		this.next();
+		Node ot = this.eval("NL{;");
+
+		this.ast ~= new ForNode(id, [fm, ot], new Parse(this.getCode(), this.file).ast);
 	}
 
 	void parse_switch(){

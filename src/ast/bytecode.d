@@ -62,7 +62,12 @@ class Op_FnDef: PzByte {
 	}
 
 	override PzOBJECT opCall(HEAP _heap){
-		_heap[name] = new PzFn(name, params, code, defaults, _heap);
+		PzOBJECT[] defs;
+
+		foreach(PzByte i; defaults)
+			defs ~= i(_heap);
+
+		_heap[name] = new PzFn(name, params, defs, code, _heap);
 		return new PzOBJECT();
 	}
 }
@@ -106,6 +111,7 @@ class Op_If: PzByte {
 	}
 }
 
+
 class Op_IfCase: PzByte {
 	PzByte[] ifs;
 
@@ -120,8 +126,52 @@ class Op_IfCase: PzByte {
 				break;
 			}
 		}
+		return new PzOBJECT();
+	}
+}
 
-		//new _Interpreter(code, _heap);
+
+class Op_While: PzByte {
+	PzByte base;
+	PzByte[] code;
+
+	this(PzByte base, PzByte[] code){
+		this.base = base;
+		this.code = code;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		while(base(_heap).__true__)
+			new _Interpreter(code, _heap);
+
+		return new PzOBJECT();
+	}
+}
+
+
+class Op_For: PzByte {
+	string var;
+	PzByte left;
+	PzByte right;
+	PzByte[] code;
+
+	this(string var, PzByte left, PzByte right, PzByte[] code){
+		this.var = var;
+		this.left = left;
+		this.right = right;
+		this.code = code;
+	}
+
+	override PzOBJECT opCall(HEAP _heap) {
+		double lt = left(_heap).__num__;
+		double rt = right(_heap).__num__;
+
+		while(lt < rt){
+			_heap[var] = new PzNum(lt);
+			new _Interpreter(code, _heap);
+			lt++;
+		}
+
 		return new PzOBJECT();
 	}
 }

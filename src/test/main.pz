@@ -1,13 +1,12 @@
-x = 90 + 8
 
 
-if 0
-	print('hello world')
-elif 0
-	print(0)
-elif 0
-	print(7)
-else
-	print('else')
+defobject Person {
+	a = 90
+	
+	def init(){
+		self.name = 'Kabuye'
+		self.age = 18
+	}
+}
 
 x = 90

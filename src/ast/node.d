@@ -625,18 +625,14 @@ class FrNode: Node{
 
 
 class ForNode: Node{
-	Node ast;
+	Node[] ran;
 	Node[] code;
 	string keys;
 
-	this(string keys, Node ast, Node[] code){
-		this.ast = ast;
+	this(string keys, Node[] ran, Node[] code){
+		this.ran = ran;
 		this.code = code;
 		this.keys = keys;
-	}
-
-	override Node expr(){
-		return this.ast;
 	}
 
 	override string str(){
@@ -645,6 +641,10 @@ class ForNode: Node{
 
 	override Node[] params(){
 		return this.code;
+	}
+
+	override Node[] leftRight(){
+		return this.ran;
 	}
 
 	override int type(){
